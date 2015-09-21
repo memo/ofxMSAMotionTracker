@@ -204,6 +204,8 @@ namespace msa {
 	void MotionTracker::update(ofPixelsRef inputImage){
 		if(!settings.enabled) return;
         
+        if(inputImage.getWidth() == 0 || inputImage.getHeight() == 0) return;
+        
 //        if(!isReady()) return;
         
 		if(captureImage == NULL || captureImage->getWidth() != inputImage.getWidth() || captureImage->getHeight() != inputImage.getHeight()) {
@@ -248,20 +250,22 @@ namespace msa {
 				opFlowInput2.setROI(xo, yo, wo, ho);
 				opticalFlow.setROI(xo, yo, wo, ho);
 			} else {
-				captureImage->resetROI();
-				resizedImage->resetROI();
-				maskedImage->resetROI();
-				//				currentScaledImage->resetROI();
-				cleanPlate.resetROI();
-				processedCleanPlate.resetROI();
-				currentGreyImage.resetROI();
-				processedGreyImage.resetROI();
-				previousGreyImage.resetROI();
-				currentDiff.resetROI();
-				accDiff.resetROI();
-				opFlowInput1.resetROI();
-				opFlowInput2.resetROI();
-				opticalFlow.resetROI();
+                if(getWidth() > 0 && getHeight() > 0) {
+                    captureImage->resetROI();
+                    resizedImage->resetROI();
+                    maskedImage->resetROI();
+                    //				currentScaledImage->resetROI();
+                    cleanPlate.resetROI();
+                    processedCleanPlate.resetROI();
+                    currentGreyImage.resetROI();
+                    processedGreyImage.resetROI();
+                    previousGreyImage.resetROI();
+                    currentDiff.resetROI();
+                    accDiff.resetROI();
+                    opFlowInput1.resetROI();
+                    opFlowInput2.resetROI();
+                    opticalFlow.resetROI();
+                }
 			}
 		}
 		
@@ -949,5 +953,22 @@ namespace msa {
             case 'd':settings.doDrawDiff ^= true; break;
 		}
 	}
+    
+    // transform coordinates to normalized coordinates applying offset and scale
+    static Vec2f posTransformedToNorm(Vec2f pos, Vec2f dim, Vec2f offset, Vec2f scale) {
+        Vec2f ret(pos/dim); // normalized
+        
+        ret -= Vec2f(0.5);
+        ret *= scale;
+        ret += Vec2f(0.5);
+        
+        ret += offset;
+        
+        return ret;
+    }
+    
+    Vec2f MotionTracker::camToWorldNorm(Vec2f camPos) const {
+        return posTransformedToNorm(camPos, Vec2f(getWidth(), getHeight()), settings.transform.offset, settings.transform.scale);
+    }
 	
 }
