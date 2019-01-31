@@ -55,12 +55,12 @@ namespace msa {
 	void MotionTracker::setup() {
 		ofLog(OF_LOG_VERBOSE, "MotionTracker::setup");
 		
-		char* libraries;
-		char* modules;
-		cvGetModuleInfo( 0, (const char**)&libraries, (const char**)&modules );
-		printf("******************************\n");
-		printf("Libraries: %s\nModules: %s\n", libraries, modules );
-		printf("******************************\n");
+//        char* libraries;
+//        char* modules;
+//        cvGetModuleInfo( 0, (const char**)&libraries, (const char**)&modules );
+//        printf("******************************\n");
+//        printf("Libraries: %s\nModules: %s\n", libraries, modules );
+//        printf("******************************\n");
 		
 		setupUI();
 		
@@ -498,12 +498,12 @@ namespace msa {
 				
 				if(settings.blurContourKernel>0) {
 					int numBlobs = contourFinder.blobs.size();
-					vector<ofPoint> newContour;
+					vector<ofDefaultVec3> newContour;
 					
 					int numSamples = 2 * settings.blurContourKernel + 1;
 					float avgInv = 1.0f/numSamples;
 					
-					ofPoint average;
+					ofDefaultVec3 average;
 					
 					for(int b = 0; b < numBlobs; b++) {
 						ofxCvBlob &blob = contourFinder.blobs[b];
@@ -511,7 +511,7 @@ namespace msa {
 						newContour = blob.pts;
 						
 						for(int p=0; p<numPoints; p++) {
-							blob.pts[p].set(0, 0, 0);
+                            blob.pts[p] = ofDefaultVec3(0, 0, 0);
 							for(int i=0; i<numSamples; i++) {
 								blob.pts[p] += newContour[mod(p + i - settings.blurContourKernel, numPoints)];
 							}
@@ -521,7 +521,7 @@ namespace msa {
 				}
 				
 				if(settings.simplifyContour>0) {
-					vector<ofPoint> newContour;
+					vector<ofDefaultVec3> newContour;
 					
 					int skipPoints = settings.simplifyContour + 1;
 					int numBlobs = contourFinder.blobs.size();
@@ -940,17 +940,15 @@ namespace msa {
 	
 	
 	void MotionTracker::keyPressed(ofKeyEventArgs &e) {
-		switch(e.key) {
-			case 'A': settings.learnBottom ^= true; if(settings.learnBottom) settings.pre.bottomThreshold = 0; break;
-			case 'a': settings.learnThreshold ^= true; break;
-			case 'b': settings.learnBG = true; break;
+        if(!(e.hasModifier(OF_KEY_CONTROL) && e.hasModifier(OF_KEY_ALT))) return;
+        int key = e.keycode;
+		switch(key) {
+//            case 'A': settings.learnBottom ^= true; if(settings.learnBottom) settings.pre.bottomThreshold = 0; break;
+			case 'A': settings.learnThreshold ^= true; break;
+			case 'B': settings.learnBG = true; break;
 //			case 'C': settings.doDrawRaw ^= true;	settings.doDrawProcessed = false; settings.doDrawDiff = false; settings.doDrawCurrent = false; break;
-
-            case 'C':
-			case 'c': settings.doDrawCurrent ^= true; settings.doDrawProcessed = false; settings.doDrawRaw = false; break;
-
-            case 'D':
-            case 'd':settings.doDrawDiff ^= true; break;
+            case 'C': settings.doDrawCurrent ^= true; settings.doDrawProcessed = false; settings.doDrawRaw = false; break;
+            case 'D': settings.doDrawDiff ^= true; break;
 		}
 	}
     
