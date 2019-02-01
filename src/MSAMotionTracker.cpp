@@ -65,10 +65,10 @@ namespace msa {
 		setupUI();
 		
 //		setDataPathToBundle();
-		imgTrackerLearning.load("settings/tracker/tracker-learning.png");
-		imgCameraIcon.load("settings/tracker/camera-icon.png");
-		doneSound.load("settings/tracker/Glass.aiff", false);
-		learningSound.load("settings/tracker/Blow.aiff", false);
+        imgTrackerLearning.load("settings/Tracker/tracker-learning.png");
+        imgCameraIcon.load("settings/Tracker/camera-icon.png");
+        doneSound.load("settings/Tracker/Glass.aiff", false);
+        learningSound.load("settings/Tracker/Blow.aiff", false);
 		learningSound.setLoop(true);
 //		restoreDataPath();
 		
@@ -192,7 +192,7 @@ namespace msa {
 		opticalFlow.reset();
 		
 		static ofImage imgCameraGrab;
-		if(imgCameraGrab.load("settings/tracker/cleanplate.tif") && imgCameraGrab.getWidth() == cleanPlate.getWidth() && imgCameraGrab.getHeight() == cleanPlate.getHeight()) {
+        if(imgCameraGrab.load("settings/Tracker/cleanplate.tif") && imgCameraGrab.getWidth() == cleanPlate.getWidth() && imgCameraGrab.getHeight() == cleanPlate.getHeight()) {
 			cleanPlate = imgCameraGrab.getPixels();
 			//cleanPlate.setFromPixels(imgCameraGrab.getPixels(), imgCameraGrab.getWidth(), imgCameraGrab.getHeight());
 		}
@@ -391,7 +391,7 @@ namespace msa {
 				static ofImage imgCleanPlate;
 				imgCleanPlate.setFromPixels(cleanPlate.getPixels());
                 //imgCleanPlate.setFromPixels(cleanPlate.getPixels(), cleanPlate.getWidth(), cleanPlate.getHeight(), OF_IMAGE_GRAYSCALE);
-				imgCleanPlate.save("settings/Tracker/cleanplate.tif");
+                imgCleanPlate.save("settings/Tracker/cleanplate.tif");
 			}
 			
 			
@@ -607,7 +607,7 @@ namespace msa {
 	void MotionTracker::setupUI() {
 		gui.saveToXML();		// save all current values so they don't get lost when we load later
 		
-		gui.addPage("TRACKER OPTIONS").setXMLName("settings/Tracker/TrackerOptions.xml");
+        gui.addPage("TRACKER OPTIONS").setXMLName("settings/Tracker/TrackerOptions.xml");
 		gui.addToggle("enabled", settings.enabled);
 		gui.addTitle("TRANSFORM");
 		gui.addToggle("flipVideoX", settings.transform.flipVideoX);
@@ -636,7 +636,7 @@ namespace msa {
 		gui.addToggle("doDrawMotionCentroid", settings.doDrawMotionCentroid);
 		gui.addSlider("alpha", settings.alpha, 0, 1);
 		
-		gui.addPage("TRACKER CONFIG").setXMLName("settings/Tracker/TrackerConfig.xml");
+        gui.addPage("TRACKER CONFIG").setXMLName("settings/Tracker/TrackerConfig.xml");
 		
 		gui.addTitle("PRE");
 		gui.addSlider("pre.blur", settings.pre.blur, 0, 15);
@@ -707,7 +707,7 @@ namespace msa {
 		
 		
 		
-		gui.addPage("SEGMENTATION").setXMLName("settings/Tracker/segmentation.xml");
+        gui.addPage("SEGMENTATION").setXMLName("settings/Tracker/segmentation.xml");
 		gui.addSlider("preBlobsBlur", settings.preBlobsBlur, 0, 15);
 		gui.addToggle("subtractBG", settings.subtractBG);
 		gui.addToggle("lessThanBG", settings.lessThanBG);
@@ -751,7 +751,7 @@ namespace msa {
 		
 		
 		//guiPages.config = &
-		gui.addPage("WARP").setXMLName("settings/Tracker/TrackerWarp.xml");
+        gui.addPage("WARP").setXMLName("settings/Tracker/TrackerWarp.xml");
 		gui.addToggle("doWarpInput", settings.doWarpInput);
 		
 		
