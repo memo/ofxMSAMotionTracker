@@ -780,7 +780,7 @@ namespace msa {
 		if( size.y != 0 ) { scaley = h/contourFinder.getHeight(); } else { scaley = 1.0f; }
 		
 		ofSetHexColor(0xFFFFFF);
-		glLineWidth(3);
+        ofSetLineWidth(3);
 		
 		if(roiSettings.useRoi) {
 			x += roiSettings.roi.x1 * scalex;
@@ -788,9 +788,9 @@ namespace msa {
 		}
 		
 		ofNoFill();
-		glPushMatrix();
-		glTranslatef( x, y, 0.0 );
-		glScalef( scalex, scaley, 0.0 );
+        ofPushMatrix();
+        ofTranslate( x, y, 0.0 );
+        ofScale( scalex, scaley, 0.0 );
 		
 		for( int i=0; i<(int)contourFinder.blobs.size(); i++ ) {
 			ofBeginShape();
@@ -800,14 +800,14 @@ namespace msa {
 			ofEndShape();
 			
 		}
-		glPopMatrix();
+        ofPopMatrix();
 		ofFill();
         ofPopStyle();
 	}
 	
 	
 	void MotionTracker::drawCameraIcon(int w) const {
-		glColor3f(1, 1, 1);
+        ofSetColor(255);
 		ofDisableAlphaBlending();
 		imgCameraIcon.draw(w - imgCameraIcon.getWidth()-50, 50);
 	}
@@ -822,7 +822,7 @@ namespace msa {
 		ofTranslate(x + w/2, y + h/2);
 		scale *= settings.transform.scale;
 		if(settings.transform.rotateVideo90) {
-			glRotatef(90, 0, 0, 1);
+            ofRotate(90, 0, 0, 1);
 			scale.y *= -1;
 			ofScale(scale.x * h, scale.y * w);
 		} else {
@@ -844,11 +844,11 @@ namespace msa {
 		
 		if(showRoi) {
 			ofNoFill();
-			glPushMatrix();
-			glTranslatef(x, y, 0);
-			glScalef(w*invSize.x, h*invSize.y, 1);
+            ofPushMatrix();
+            ofTranslate(x, y, 0);
+            ofScale(w*invSize.x, h*invSize.y, 1);
 			ofDrawRectangle(roiSettings.roi.x1, roiSettings.roi.y1, roiSettings.roi.width(), roiSettings.roi.height());
-			glPopMatrix();
+            ofPopMatrix();
 			ofFill();
 		}
 		
@@ -858,17 +858,18 @@ namespace msa {
 	void MotionTracker::draw(float x, float y, float w, float h) const {
         if(!isReady()) return;
 
-		glDisable(GL_DEPTH_TEST);
+        ofDisableDepthTest();
 		
 		if(settings.doDrawProcessed && settings.alpha) {
 			ofEnableAlphaBlending();
-			glColor3f(settings.alpha, settings.alpha, settings.alpha);
+            int b = 255*settings.alpha;
+            ofSetColor(b, b, b);
 			draw(processedGreyImage, x, y, w, h);
 			drawCameraIcon(w);
 		}
 		
 		if(settings.doDrawCurrent && settings.alpha) {
-			glColor3f(1, 1, 1);
+            ofSetColor(255);
 			ofDisableAlphaBlending();
 			draw(currentGreyImage, x, y, w, h);
 			drawCameraIcon(w);
@@ -876,41 +877,41 @@ namespace msa {
 		
 		if(settings.doDrawMasked && settings.alpha) {
 			ofEnableAlphaBlending();
-			glColor4f(1, 1, 1, settings.alpha);
+            ofSetColor(255, 255*settings.alpha);
 			draw(*maskedImage, x, y, w, h);
 		}
 		
 		if(settings.doDrawRaw || isLearning || roiSettings.showRoi) {
-			glColor3f(1, 1, 1);
+            ofSetColor(255);
 			ofDisableAlphaBlending();
 			draw(*captureImage, x, y, w, h, settings.transform.flipVideoX, settings.transform.flipVideoY, roiSettings.showRoi);
 			drawCameraIcon(w);
 		}
 		
 		if(settings.doDrawResized && settings.alpha) {
-			glColor3f(1, 1, 1);
+            ofSetColor(255);
 			ofDisableAlphaBlending();
 			draw(*resizedImage, x, y, w, h, settings.transform.flipVideoX, settings.transform.flipVideoY, roiSettings.showRoi);
 			drawCameraIcon(w);
 		}
 		
 		if(settings.doDrawDiff && settings.alpha) {
-			ofEnableAlphaBlending();
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-			glColor3f(settings.alpha, settings.alpha, settings.alpha);
-			draw(currentDiff, x, y, w, h);
+            ofEnableBlendMode(OF_BLENDMODE_ADD);
+            int b = 255*settings.alpha;
+            ofSetColor(b, b, b);
+            draw(currentDiff, x, y, w, h);
 		}
 		
 		if(settings.doDrawDiffAcc && settings.alpha) {
 			ofEnableAlphaBlending();
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-			draw(accDiff, x, y, w, h);
+            ofEnableBlendMode(OF_BLENDMODE_ADD);
+            draw(accDiff, x, y, w, h);
 		}
 		
 		
 		if(isLearning) {
 			ofEnableAlphaBlending();
-			glColor4f(1, 1, 1, 0.3);
+            ofSetColor(255, 100);
 			imgTrackerLearning.draw(w/2 - imgTrackerLearning.getWidth()/2, h/2 - imgTrackerLearning.getHeight()/2);
 			
 			ofDisableAlphaBlending();
@@ -930,12 +931,6 @@ namespace msa {
 			ofSetColor(255, 255, 255);
 			ofDrawCircle(stats.motionCenter.x * w, stats.motionCenter.y * h, 50);
 		}
-		
-		//	glPushMatrix();
-		//	glTranslatef(x, y, 0);
-		//	glScalef(w * invWidth, h * invHeight, 1);
-		//	glPopMatrix();
-		
 	}
 	
 	
