@@ -129,6 +129,7 @@ namespace msa {
 				int			openAmount;
 				int			closeAmount;
 				int			blur2;							// blur after processing
+            float        avgMotionMax;                   // for normalising stats.avgMotion
 			} diff;
 			
 			struct {
@@ -192,7 +193,8 @@ namespace msa {
 			ofPoint			avgVel;
 			float			avgSpeed2;
 			float			curMotion;			// how much motion there is in the current frame
-			float			avgMotion;			// how much motion there is over the averaged frames frame (ratio 0...1)
+        float            avgMotion;            // how much motion there is over the averaged frames frame (ratio 0...1, but in reality tiny)
+        float            avgMotionNorm;        // normalised 0...1 with avgMotionMax
 			int				idleFrames;
 			int				motionFrames;
 			float			idleTime;

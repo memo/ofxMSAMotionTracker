@@ -333,6 +333,7 @@ namespace msa {
 			stats.curMotion = cvCountNonZero(currentDiff.getCvImage()) * 1.0f/(size.x * size.y);
 			stats.avgMotion *= 1-f;
 			stats.avgMotion += stats.curMotion * f;
+        stats.avgMotionNorm = ofNormalize(stats.avgMotion, 0, settings.diff.avgMotionMax);
 			if(stats.avgMotion <= settings.noMotionThreshold * settings.noMotionThreshold) {
 				if(stats.hasMotion) {
 					stats.hasMotion	= false;
@@ -659,6 +660,7 @@ namespace msa {
 		gui.addSlider("diff.openAmount", settings.diff.openAmount, 0, 10);
 		gui.addSlider("diff.closeAmount", settings.diff.closeAmount, 0, 10);
 		gui.addSlider("diff.blur2", settings.diff.blur2, 0, 15);
+    gui.addSlider("diff.avgMotionMax", settings.diff.avgMotionMax, 0, 1);
 		
 		gui.addTitle("ACC DIFF");
 		gui.addToggle("accDiff.enabled", settings.accDiff.enabled);
@@ -740,6 +742,7 @@ namespace msa {
 		gui.addSlider("avgSpeed2", stats.avgSpeed2, 0, 1);
 		gui.addSlider("curMotion", stats.curMotion, 0, 1);
 		gui.addSlider("avgMotion", stats.avgMotion, 0, 1);
+    gui.addSlider("avgMotionNorm", stats.avgMotionNorm, 0, 1);
 		gui.addSlider("motionCenter.x", stats.motionCenter.x, 0, 1);
 		gui.addSlider("motionCenter.y", stats.motionCenter.y, 0, 1);
 		gui.addSlider("idleTime", stats.idleTime, 0, 1);
