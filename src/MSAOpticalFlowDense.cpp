@@ -100,12 +100,8 @@ namespace msa {
 			for(int i = 0; i < getWidth(); i += drawStep){
 				Vec2f v = getVelocityAt(i, j);
 				if(v.lengthSquared() > drawThreshold2) {
-//					printf("%f\n", v.lengthSquared());
-					glBegin(GL_LINES);
-					glColor3f(1, 1, 1); glVertex2f(i, j);
-					glColor3f(1, 0, 0); glVertex2f(i + v.x*2, j + v.y*2);
-					glEnd();
-				}
+                    ofDrawLine(i, j, i + v.x*2, j + v.y*2);
+                }
 			}
 		}
 	}
