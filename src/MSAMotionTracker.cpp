@@ -217,7 +217,8 @@ void MotionTracker::update(ofPixelsRef inputImage){
 
     //        if(!isReady()) return;
 
-    if(captureImage == NULL || captureImage->getWidth() != inputImage.getWidth() || captureImage->getHeight() != inputImage.getHeight()) {
+    if(settings.reinit || captureImage == NULL || captureImage->getWidth() != inputImage.getWidth() || captureImage->getHeight() != inputImage.getHeight()) {
+        settings.reinit = false;
         printf("MotionTracker: image size changed\n");
         allocateTextures(inputImage);
     }
@@ -284,6 +285,8 @@ void MotionTracker::update(ofPixelsRef inputImage){
         resizedImage->scaleIntoMe(*captureImage);
     }
 
+    if(settings.transform.flipVideoX || settings.transform.flipVideoY) resizedImage->mirror(settings.transform.flipVideoY, settings.transform.flipVideoX);                    // mirror it
+
     previousGreyImage = currentGreyImage;                            // save frame for next frame
     opFlowInput2 = opFlowInput1;
 
@@ -299,7 +302,7 @@ void MotionTracker::update(ofPixelsRef inputImage){
 
     if(useBG) processedCleanPlate = cleanPlate;
 
-    if(settings.transform.flipVideoX || settings.transform.flipVideoY) currentGreyImage.mirror(settings.transform.flipVideoY, settings.transform.flipVideoX);                    // mirror it
+//    if(settings.transform.flipVideoX || settings.transform.flipVideoY) currentGreyImage.mirror(settings.transform.flipVideoY, settings.transform.flipVideoX);                    // mirror it
     if(settings.pre.blur)     {
         cvSmooth(currentGreyImage.getCvImage(), currentGreyImage.getCvImage(), CV_BLUR , settings.pre.blur*2+1);
         if(useBG) cvSmooth(processedCleanPlate.getCvImage(), processedCleanPlate.getCvImage(), CV_BLUR , settings.pre.blur*2+1);
@@ -619,6 +622,7 @@ void MotionTracker::setupUI() {
 
     gui.addPage("TRACKER OPTIONS").setXMLName("settings/Tracker/TrackerOptions.xml");
     gui.addToggle("enabled", settings.enabled);
+    gui.addToggle("reinit", settings.reinit);
     gui.addTitle("TRANSFORM");
     gui.addToggle("flipVideoX", settings.transform.flipVideoX);
     gui.addToggle("flipVideoY", settings.transform.flipVideoY);
@@ -947,7 +951,7 @@ void MotionTracker::draw(float x, float y, float w, float h) const {
 
 
 void MotionTracker::keyPressed(ofKeyEventArgs &e) {
-    if(!(e.hasModifier(OF_KEY_CONTROL) && e.hasModifier(OF_KEY_ALT))) return;
+    if(!(e.hasModifier(OF_KEY_CONTROL))) return;
     int key = e.keycode;
     switch(key) {
     //            case 'A': settings.learnBottom ^= true; if(settings.learnBottom) settings.pre.bottomThreshold = 0; break;

@@ -37,7 +37,7 @@ struct RoiInfo {
 
 class MotionTracker {
 public:
-    int                        videoFrame;
+    int                     videoFrame;
 
     shared_ptr<ofxCvImage>  captureImage;                // raw captured image (can be color or greyscale)
     shared_ptr<ofxCvImage>  resizedImage;
@@ -48,8 +48,8 @@ public:
     ofxCvGrayscaleImage     processedGreyImage;            // greyscale version of now, but processed etc.
     ofxCvGrayscaleImage     previousGreyImage;            // previous frame
     ofxCvGrayscaleImage     currentDiff;                // difference between last 2 frames
-    ofxCvGrayscaleImage        accDiff;                    // accumulated diff
-    ofxCvContourFinder        contourFinder;
+    ofxCvGrayscaleImage     accDiff;                    // accumulated diff
+    ofxCvContourFinder      contourFinder;
 
     ofxCvGrayscaleImage     opFlowInput1;                // greyscale version of now
     ofxCvGrayscaleImage     opFlowInput2;                // previous frame
@@ -73,6 +73,7 @@ public:
 
     struct {
         bool            enabled;
+        bool            reinit = false;
         int                scaleDown;
         bool            subtractBG;
         bool            lessThanBG;
