@@ -951,7 +951,7 @@ void MotionTracker::draw(float x, float y, float w, float h) const {
 
 
 void MotionTracker::keyPressed(ofKeyEventArgs &e) {
-    if(!(e.hasModifier(OF_KEY_CONTROL))) return;
+    if(!(e.hasModifier(OF_KEY_ALT))) return;
     int key = e.keycode;
     switch(key) {
     //            case 'A': settings.learnBottom ^= true; if(settings.learnBottom) settings.pre.bottomThreshold = 0; break;
